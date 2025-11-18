@@ -5,7 +5,8 @@ const selectedProductsList = document.getElementById("selectedProductsList");
 const generateRoutineBtn = document.getElementById("generateRoutine");
 const chatForm = document.getElementById("chatForm");
 const chatWindow = document.getElementById("chatWindow");
-
+// OpenAI API Key - Keep this file secure and never commit to version control
+const OPENAI_API_KEY = "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";
 /* Array to store selected products */
 let selectedProducts = [];
 

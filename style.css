@@ -15,10 +15,12 @@
 
 /* —— body + fonts —— */
 body {
-  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  font-family: "Source Sans Pro", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   display: flex;
   justify-content: center;
+  font-weight: 400;
+  letter-spacing: 0.3px;
 }
 
 .page-wrapper {
@@ -39,10 +41,12 @@ body {
 }
 
 .site-title {
-  font-size: 22px;
-  font-weight: 500;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
   margin-bottom: 10px;
   color: var(--loreal-red);
+  letter-spacing: 0.5px;
 }
 
 /* category filter */
@@ -54,12 +58,13 @@ body {
 .search-section select {
   width: 100%;
   padding: 16px;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 500;
   border: 2px solid #000;
   border-radius: 8px;
   cursor: pointer;
   background-color: white;
-  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 .search-section select:focus {
@@ -76,9 +81,12 @@ body {
 }
 
 .chatbox h2 {
-  font-size: 20px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
   margin-bottom: 20px;
   color: var(--loreal-red);
+  letter-spacing: 0.3px;
 }
 
 .chat-window {
@@ -232,9 +240,12 @@ body {
 }
 
 .selected-products h2 {
-  font-size: 20px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
   margin-bottom: 20px;
   color: var(--loreal-red);
+  letter-spacing: 0.3px;
 }
 
 #selectedProductsList {

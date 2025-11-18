@@ -9,6 +9,30 @@ const chatWindow = document.getElementById("chatWindow");
 /* Array to store selected products */
 let selectedProducts = [];
 
+/* LocalStorage functions for persisting selected products */
+function saveSelectedProducts() {
+  localStorage.setItem('lorealSelectedProducts', JSON.stringify(selectedProducts));
+}
+
+function loadSelectedProducts() {
+  const saved = localStorage.getItem('lorealSelectedProducts');
+  if (saved) {
+    try {
+      selectedProducts = JSON.parse(saved);
+    } catch (error) {
+      console.error('Error loading saved products:', error);
+      selectedProducts = [];
+    }
+  }
+}
+
+function clearAllSelectedProducts() {
+  selectedProducts = [];
+  saveSelectedProducts();
+  updateSelectedProductsList();
+  updateProductCardStyles();
+}
+
 /* Show initial placeholder until user selects a category */
 productsContainer.innerHTML = `
   <div class="placeholder-message">
@@ -78,7 +102,8 @@ async function toggleProductSelection(productId) {
     selectedProducts.push(product);
   }
   
-  /* Update both the product cards and selected products list */
+  /* Save to localStorage and update displays */
+  saveSelectedProducts();
   updateProductCardStyles();
   updateSelectedProductsList();
 }
@@ -106,7 +131,7 @@ function updateSelectedProductsList() {
     return;
   }
   
-  selectedProductsList.innerHTML = selectedProducts.map(product => `
+  const productsHtml = selectedProducts.map(product => `
     <div class="selected-product-item">
       <span>${product.name}</span>
       <button class="remove-btn" onclick="removeSelectedProduct(${product.id})" title="Remove product">
@@ -114,17 +139,29 @@ function updateSelectedProductsList() {
       </button>
     </div>
   `).join('');
+  
+  const clearAllButton = `
+    <div class="clear-all-container">
+      <button class="clear-all-btn" onclick="clearAllSelectedProducts()" title="Clear all selected products">
+        <i class="fa-solid fa-trash"></i> Clear All
+      </button>
+    </div>
+  `;
+  
+  selectedProductsList.innerHTML = productsHtml + clearAllButton;
 }
 
 /* Remove a product from the selected products list */
 function removeSelectedProduct(productId) {
   selectedProducts = selectedProducts.filter(p => p.id !== productId);
+  saveSelectedProducts();
   updateSelectedProductsList();
   updateProductCardStyles();
 }
 
 /* Initialize the selected products list on page load */
 document.addEventListener('DOMContentLoaded', () => {
+  loadSelectedProducts();
   updateSelectedProductsList();
 });
 

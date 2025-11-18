@@ -385,6 +385,39 @@ body {
   color: white;
 }
 
+.clear-all-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.clear-all-btn {
+  background-color: transparent;
+  border: 2px solid var(--loreal-red);
+  color: var(--loreal-red);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clear-all-btn:hover {
+  background-color: var(--loreal-red);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 0, 59, 0.3);
+}
+
+.clear-all-btn i {
+  font-size: 12px;
+}
+
 .generate-btn {
   width: 100%;
   margin-top: 20px;

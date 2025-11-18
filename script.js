@@ -5,8 +5,9 @@ const selectedProductsList = document.getElementById("selectedProductsList");
 const generateRoutineBtn = document.getElementById("generateRoutine");
 const chatForm = document.getElementById("chatForm");
 const chatWindow = document.getElementById("chatWindow");
-// OpenAI API Key - Keep this file secure and never commit to version control
-const OPENAI_API_KEY = "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";
+// Replace this URL with your actual Cloudflare Worker URL
+const WORKER_URL = 'https://loreal-routine-api.your-subdomain.workers.dev'; // UPDATE THIS!
+
 /* Array to store selected products */
 let selectedProducts = [];
 
@@ -204,10 +205,10 @@ generateRoutineBtn.addEventListener('click', async () => {
     Format the response as a clear, easy-to-follow routine.`;
     
     console.log('Sending request with products:', productDetails);
-    console.log('API Key available:', !!OPENAI_API_KEY);
-    console.log('API Key starts with:', OPENAI_API_KEY ? OPENAI_API_KEY.substring(0, 10) + '...' : 'undefined');
+    console.log('Worker URL:', 
+loreal-routine-api.archan1.workers.dev);
     
-    // Make request to OpenAI API for routine generation
+    // Make request to Cloudflare Worker
     const requestBody = {
       model: 'gpt-4o',
       messages: [
@@ -226,11 +227,10 @@ generateRoutineBtn.addEventListener('click', async () => {
     
     console.log('Request body:', requestBody);
     
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
     });
@@ -310,12 +310,11 @@ chatForm.addEventListener("submit", async (e) => {
       ? `\n\nSelected products: ${selectedProducts.map(p => `${p.name} by ${p.brand}`).join(', ')}`
       : '';
     
-    // Make request to OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Make request to Cloudflare Worker
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'gpt-4o',

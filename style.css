@@ -1,3 +1,11 @@
+/* —— CSS Custom Properties —— */
+:root {
+  --loreal-red: #ff003b;
+  --loreal-gold: #e3a535;
+  --text-dark: #333;
+  --border-dark: #000;
+}
+
 /* —— basic reset —— */
 * {
   box-sizing: border-box;
@@ -34,6 +42,7 @@ body {
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 10px;
+  color: var(--loreal-red);
 }
 
 /* category filter */
@@ -55,13 +64,13 @@ body {
 
 .search-section select:focus {
   outline: none;
-  border-color: #666;
+  border-color: var(--loreal-gold);
 }
 
 /* chat section */
 .chatbox {
   margin: 40px 0;
-  border: 2px solid #000;
+  border: 2px solid var(--loreal-red);
   border-radius: 8px;
   padding: 26px;
 }
@@ -69,6 +78,7 @@ body {
 .chatbox h2 {
   font-size: 20px;
   margin-bottom: 20px;
+  color: var(--loreal-red);
 }
 
 .chat-window {
@@ -108,12 +118,12 @@ body {
 
 .chat-form input:focus {
   outline: none;
-  border-bottom-color: #000;
+  border-bottom-color: var(--loreal-gold);
 }
 
 .chat-form button {
   font-size: 18px;
-  background: #000;
+  background: var(--loreal-red);
   color: #fff;
   border: none;
   padding: 12px;
@@ -127,7 +137,7 @@ body {
 }
 
 .chat-form button:hover {
-  background: #666666;
+  background: var(--loreal-gold);
 }
 
 .chat-form button:focus {
@@ -217,13 +227,14 @@ body {
 .selected-products {
   margin: 40px 0;
   padding: 20px;
-  border: 2px solid #000;
+  border: 2px solid var(--loreal-red);
   border-radius: 8px;
 }
 
 .selected-products h2 {
   font-size: 20px;
   margin-bottom: 20px;
+  color: var(--loreal-red);
 }
 
 #selectedProductsList {
@@ -239,7 +250,7 @@ body {
   font-size: 18px;
   font-weight: 500;
   color: #fff;
-  background: #000;
+  background: var(--loreal-red);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -247,7 +258,7 @@ body {
 }
 
 .generate-btn:hover {
-  background: #666;
+  background: var(--loreal-gold);
 }
 
 .generate-btn i {

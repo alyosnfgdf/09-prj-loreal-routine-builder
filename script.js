@@ -6,7 +6,7 @@ const generateRoutineBtn = document.getElementById("generateRoutine");
 const chatForm = document.getElementById("chatForm");
 const chatWindow = document.getElementById("chatWindow");
 // Replace this URL with your actual Cloudflare Worker URL
-const WORKER_URL = 'https://loreal-routine-api.your-subdomain.workers.dev'; // UPDATE THIS!
+const WORKER_URL = 'loreal-routine-api.archan1.workers.dev'; // UPDATE THIS!
 
 /* Array to store selected products */
 let selectedProducts = [];
@@ -205,9 +205,8 @@ generateRoutineBtn.addEventListener('click', async () => {
     Format the response as a clear, easy-to-follow routine.`;
     
     console.log('Sending request with products:', productDetails);
-    console.log('Worker URL:', 
-loreal-routine-api.archan1.workers.dev);
-    
+    console.log('Worker URL:', WORKER_URL);
+
     // Make request to Cloudflare Worker
     const requestBody = {
       model: 'gpt-4o',

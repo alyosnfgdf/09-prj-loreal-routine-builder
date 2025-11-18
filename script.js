@@ -165,35 +165,56 @@ generateRoutineBtn.addEventListener('click', async () => {
     
     Format the response as a clear, easy-to-follow routine.`;
     
+    console.log('Sending request with products:', productDetails);
+    console.log('API Key available:', !!OPENAI_API_KEY);
+    console.log('API Key starts with:', OPENAI_API_KEY ? OPENAI_API_KEY.substring(0, 10) + '...' : 'undefined');
+    
     // Make request to OpenAI API for routine generation
+    const requestBody = {
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a professional L\'Oréal beauty expert and skincare specialist. Create detailed, personalized beauty routines based on the specific products provided. Focus on proper application order, timing, and maximizing product benefits. Be specific about techniques and provide helpful tips.'
+        },
+        {
+          role: 'user',
+          content: routinePrompt
+        }
+      ],
+      max_tokens: 800,
+      temperature: 0.7
+    };
+    
+    console.log('Request body:', requestBody);
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${OPENAI_API_KEY}`
       },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a professional L\'Oréal beauty expert and skincare specialist. Create detailed, personalized beauty routines based on the specific products provided. Focus on proper application order, timing, and maximizing product benefits. Be specific about techniques and provide helpful tips.'
-          },
-          {
-            role: 'user',
-            content: routinePrompt
-          }
-        ],
-        max_tokens: 800,
-        temperature: 0.7
-      })
+      body: JSON.stringify(requestBody)
     });
     
+    console.log('API Response Status:', response.status);
+    console.log('API Response Headers:', response.headers);
+    
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+      const errorText = await response.text();
+      console.error('API Error Response:', errorText);
+      throw new Error(`API request failed: ${response.status} - ${errorText}`);
     }
     
     const data = await response.json();
+    console.log('API Response Data:', data);
+    
+    // Check if the response has the expected structure
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected API response structure:', data);
+      throw new Error('Invalid response structure from API');
+    }
+    
     const routine = data.choices[0].message.content;
     
     // Remove loading message and display the generated routine
@@ -202,8 +223,26 @@ generateRoutineBtn.addEventListener('click', async () => {
     
   } catch (error) {
     console.error('Error generating routine:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      selectedProducts: selectedProducts
+    });
     removeLastMessage();
-    addMessageToChat('assistant', 'Sorry, I couldn\'t generate your routine right now. Please try again in a moment.');
+    
+    // Provide more specific error messages
+    let errorMessage = 'Sorry, I couldn\'t generate your routine right now. ';
+    if (error.message.includes('401')) {
+      errorMessage += 'There seems to be an authentication issue with the API key.';
+    } else if (error.message.includes('429')) {
+      errorMessage += 'API rate limit exceeded. Please try again in a moment.';
+    } else if (error.message.includes('500')) {
+      errorMessage += 'The API service is temporarily unavailable.';
+    } else {
+      errorMessage += 'Please try again in a moment.';
+    }
+    
+    addMessageToChat('assistant', errorMessage);
   } finally {
     // Re-enable button and restore original text
     generateRoutineBtn.disabled = false;

@@ -204,6 +204,25 @@ body {
   display: flex;
   gap: 15px;
   min-height: 160px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  border-color: var(--loreal-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-card.selected {
+  border: 3px solid var(--loreal-red);
+  background-color: rgba(255, 0, 59, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 0, 59, 0.2);
+}
+
+.product-card.selected:hover {
+  border-color: var(--loreal-red);
 }
 
 .product-card img {
@@ -252,6 +271,40 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.selected-product-item {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 0, 59, 0.1);
+  border: 1px solid var(--loreal-red);
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--loreal-red);
+}
+
+.selected-product-item .remove-btn {
+  background: none;
+  border: none;
+  color: var(--loreal-red);
+  font-size: 16px;
+  margin-left: 8px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.selected-product-item .remove-btn:hover {
+  background-color: var(--loreal-red);
+  color: white;
 }
 
 .generate-btn {

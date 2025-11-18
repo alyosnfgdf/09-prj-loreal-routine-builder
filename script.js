@@ -127,9 +127,89 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSelectedProductsList();
 });
 
-/* Chat form submission handler - placeholder for OpenAI integration */
-chatForm.addEventListener("submit", (e) => {
+/* Chat form submission handler with OpenAI integration */
+chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  chatWindow.innerHTML = "Connect to the OpenAI API for a response!";
+  
+  const userInput = document.getElementById('userInput');
+  const userMessage = userInput.value.trim();
+  
+  if (!userMessage) return;
+  
+  // Clear input and show user message
+  userInput.value = '';
+  addMessageToChat('user', userMessage);
+  
+  // Show loading indicator
+  addMessageToChat('assistant', 'Thinking...');
+  
+  try {
+    // Create context about selected products for the AI
+    const selectedProductsContext = selectedProducts.length > 0 
+      ? `\n\nSelected products: ${selectedProducts.map(p => `${p.name} by ${p.brand}`).join(', ')}`
+      : '';
+    
+    // Make request to OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a L'Oréal beauty expert helping customers build personalized skincare and beauty routines. Provide helpful, friendly advice about products, routines, and beauty tips. Keep responses concise but informative.${selectedProductsContext}`
+          },
+          {
+            role: 'user', 
+            content: userMessage
+          }
+        ],
+        max_tokens: 300,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const aiResponse = data.choices[0].message.content;
+    
+    // Remove loading indicator and show AI response
+    removeLastMessage();
+    addMessageToChat('assistant', aiResponse);
+    
+  } catch (error) {
+    console.error('Error calling OpenAI API:', error);
+    removeLastMessage();
+    addMessageToChat('assistant', 'Sorry, I\'m having trouble connecting right now. Please try again in a moment.');
+  }
 });
+
+/* Add message to chat window */
+function addMessageToChat(sender, message) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `chat-message ${sender}`;
+  
+  if (sender === 'user') {
+    messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+  } else {
+    messageDiv.innerHTML = `<strong>L'Oréal Assistant:</strong> ${message}`;
+  }
+  
+  chatWindow.appendChild(messageDiv);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+/* Remove the last message (used for removing loading indicator) */
+function removeLastMessage() {
+  const lastMessage = chatWindow.lastElementChild;
+  if (lastMessage) {
+    lastMessage.remove();
+  }
+}

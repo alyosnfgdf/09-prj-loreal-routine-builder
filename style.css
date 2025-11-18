@@ -396,11 +396,27 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  position: relative;
 }
 
 .generate-btn:hover {
   background: var(--loreal-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 0, 59, 0.3);
+}
+
+.generate-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.generate-btn:disabled:hover {
+  background: #ccc;
+  transform: none;
+  box-shadow: none;
 }
 
 .generate-btn i {

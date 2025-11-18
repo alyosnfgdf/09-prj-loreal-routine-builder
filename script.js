@@ -2,6 +2,7 @@
 const categoryFilter = document.getElementById("categoryFilter");
 const productsContainer = document.getElementById("productsContainer");
 const selectedProductsList = document.getElementById("selectedProductsList");
+const generateRoutineBtn = document.getElementById("generateRoutine");
 const chatForm = document.getElementById("chatForm");
 const chatWindow = document.getElementById("chatWindow");
 
@@ -125,6 +126,89 @@ function removeSelectedProduct(productId) {
 /* Initialize the selected products list on page load */
 document.addEventListener('DOMContentLoaded', () => {
   updateSelectedProductsList();
+});
+
+/* Generate Routine button handler */
+generateRoutineBtn.addEventListener('click', async () => {
+  // Check if any products are selected
+  if (selectedProducts.length === 0) {
+    addMessageToChat('assistant', 'Please select at least one product to generate a personalized routine.');
+    return;
+  }
+  
+  // Disable button and change text while processing
+  generateRoutineBtn.disabled = true;
+  const originalText = generateRoutineBtn.innerHTML;
+  generateRoutineBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Your Routine...';
+  
+  // Show loading message in chat
+  addMessageToChat('assistant', 'Creating your personalized routine...');
+  
+  try {
+    // Prepare detailed product data for the AI
+    const productDetails = selectedProducts.map(product => ({
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      description: product.description
+    }));
+    
+    // Create comprehensive prompt for routine generation
+    const routinePrompt = `Please create a detailed, step-by-step beauty routine using these specific products: ${JSON.stringify(productDetails, null, 2)}
+    
+    Include:
+    1. The correct order of application
+    2. Best time to use each product (morning/evening)
+    3. How to apply each product
+    4. Any important tips or warnings
+    5. Expected benefits
+    
+    Format the response as a clear, easy-to-follow routine.`;
+    
+    // Make request to OpenAI API for routine generation
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a professional L\'Oréal beauty expert and skincare specialist. Create detailed, personalized beauty routines based on the specific products provided. Focus on proper application order, timing, and maximizing product benefits. Be specific about techniques and provide helpful tips.'
+          },
+          {
+            role: 'user',
+            content: routinePrompt
+          }
+        ],
+        max_tokens: 800,
+        temperature: 0.7
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const routine = data.choices[0].message.content;
+    
+    // Remove loading message and display the generated routine
+    removeLastMessage();
+    addMessageToChat('assistant', routine);
+    
+  } catch (error) {
+    console.error('Error generating routine:', error);
+    removeLastMessage();
+    addMessageToChat('assistant', 'Sorry, I couldn\'t generate your routine right now. Please try again in a moment.');
+  } finally {
+    // Re-enable button and restore original text
+    generateRoutineBtn.disabled = false;
+    generateRoutineBtn.innerHTML = originalText;
+  }
 });
 
 /* Chat form submission handler with OpenAI integration */
